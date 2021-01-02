@@ -110,7 +110,10 @@ impl<R: BufRead> Parser<R> {
                 self.consume(Token::Semicolon)?;
                 Ok(Stmt::VarDecl(sym.clone(), Box::new(init)))
             }
-            _ => todo!(),
+            _ => Err(ParserError::Parse(FullParseError {
+                pos: self.current_pos,
+                error: ParseError::ExpectedIdentifier,
+            })),
         }
     }
 
@@ -637,6 +640,18 @@ mod tests {
             ]
         );
         Ok(())
+    }
+
+    #[test]
+    fn var_decl_without_id() {
+        match parse_prg("var 1;") {
+            Err(ParserError::Parse(FullParseError { pos, error }))
+                if pos == 1 && error == ParseError::ExpectedIdentifier =>
+            {
+                ()
+            }
+            r => panic!("unexpected output: {:?}", r),
+        }
     }
 
     #[test]
