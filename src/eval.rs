@@ -73,9 +73,9 @@ pub struct Evaluator<'t, W: Write> {
 pub enum RuntimeError {
     DivByZero,
     TypeMismatch,
-    UnknownVar(Symbol),
+    UnknownVar(String),
     Io(io::Error),
-    RedefinedVar(Symbol),
+    RedefinedVar(String),
     NotCallable,
     BadNumberOfArguments,
 }
@@ -220,7 +220,7 @@ impl<'a, W: Write> Evaluator<'a, W> {
                 if let Some(val) = env.get(sym) {
                     Ok(val.clone())
                 } else {
-                    Err(RuntimeError::UnknownVar(sym.clone()))
+                    Err(RuntimeError::UnknownVar(sym.name().to_owned()))
                 }
             }
             Expr::UnaryMinus(expr) => {
@@ -395,7 +395,7 @@ impl Env {
             entry.insert(val);
             Ok(())
         } else {
-            Err(RuntimeError::RedefinedVar(sym.clone()))
+            Err(RuntimeError::RedefinedVar(sym.name().to_owned()))
         }
     }
 
@@ -407,7 +407,7 @@ impl Env {
             if let Some(parent) = self.parent.as_ref() {
                 parent.reset(sym, val)
             } else {
-                Err(RuntimeError::UnknownVar(sym.clone()))
+                Err(RuntimeError::UnknownVar(sym.name().to_owned()))
             }
         }
     }
