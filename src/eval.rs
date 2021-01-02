@@ -715,7 +715,7 @@ mod tests {
                 Box::new(Expr::Number(42.0)),
             )))],
         ) {
-            Err(RuntimeError::UnknownVar(sym)) if sym == foo_sym => (),
+            Err(RuntimeError::UnknownVar(sym)) if sym == foo_sym.name() => (),
             out => panic!("unexpected output: {:?}", out),
         }
     }
@@ -732,7 +732,7 @@ mod tests {
                 Stmt::Print(Box::new(Expr::Var(foo_sym.clone()))),
             ],
         ) {
-            Err(RuntimeError::RedefinedVar(sym)) if sym == foo_sym => (),
+            Err(RuntimeError::RedefinedVar(sym)) if sym == foo_sym.name() => (),
             out => panic!("unexpected output: {:?}", out),
         }
     }
