@@ -33,8 +33,8 @@ use crate::parser::{Parser, ParserError};
 /// "#;
 /// interp.eval(func_def.as_bytes())?;
 ///
-/// interp.eval("print max(10,20);".as_bytes()).expect("interpreter error");
-/// interp.eval("print max(5,4);".as_bytes()).expect("interpreter error");
+/// interp.eval("print max(10,20);".as_bytes())?;
+/// interp.eval("print max(5,4);".as_bytes())?;
 ///
 /// assert_eq!(output, b"20\n5\n");
 /// # Ok::<(), LoxError>(())
