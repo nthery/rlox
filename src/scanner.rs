@@ -76,7 +76,7 @@ impl<R: BufRead> Scanner<R> {
                             self.input.next();
                             return Ok(Token::BangEqual);
                         } else {
-                            todo!()
+                            return Ok(Token::Bang);
                         }
                     }
                     '0'..='9' => return Ok(self.scan_number(ch)?),
@@ -221,7 +221,7 @@ mod tests {
     #[test]
     fn fixed_tokens() -> Result<(), ScannerError> {
         assert_eq!(
-            scan("+-*/() = == != <>;,{}")?,
+            scan("+-*/() = == ! != <>;,{}")?,
             vec![
                 Token::Plus,
                 Token::Minus,
@@ -231,6 +231,7 @@ mod tests {
                 Token::RightParen,
                 Token::Equal,
                 Token::EqualEqual,
+                Token::Bang,
                 Token::BangEqual,
                 Token::Less,
                 Token::Greater,

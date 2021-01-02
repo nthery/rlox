@@ -23,6 +23,7 @@ pub enum Expr {
     Bool(bool),
     Var(Symbol),
     UnaryMinus(Box<Expr>),
+    Not(Box<Expr>),
     Equal(Box<Expr>, Box<Expr>),
     NotEqual(Box<Expr>, Box<Expr>),
     Less(Box<Expr>, Box<Expr>),

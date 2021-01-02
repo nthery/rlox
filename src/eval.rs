@@ -223,6 +223,13 @@ impl<'a, W: Write> Evaluator<'a, W> {
                     Err(RuntimeError::UnknownVar(sym.name().to_owned()))
                 }
             }
+            Expr::Not(expr) => {
+                if let Value::Bool(b) = self.eval_expr(expr, env)? {
+                    Ok(Value::Bool(!b))
+                } else {
+                    Err(RuntimeError::TypeMismatch)
+                }
+            }
             Expr::UnaryMinus(expr) => {
                 if let Value::Number(n) = self.eval_expr(expr, env)? {
                     Ok(Value::Number(-n))
@@ -487,6 +494,15 @@ mod tests {
         assert_eq!(
             eval_expr(&Expr::UnaryMinus(Box::new(Expr::Number(1.0))))?,
             Value::Number(-1.0)
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn logical_not() -> Result<(), RuntimeError> {
+        assert_eq!(
+            eval_expr(&Expr::Not(Box::new(Expr::Bool(true))))?,
+            Value::Bool(false)
         );
         Ok(())
     }

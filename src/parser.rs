@@ -318,6 +318,10 @@ impl<R: BufRead> Parser<R> {
                 self.advance()?;
                 Ok(Expr::UnaryMinus(Box::new(self.unary()?)))
             }
+            Token::Bang => {
+                self.advance()?;
+                Ok(Expr::Not(Box::new(self.unary()?)))
+            }
             _ => self.call(),
         }
     }
@@ -445,6 +449,15 @@ mod tests {
         assert_eq!(
             parse_expr("--42")?,
             Expr::UnaryMinus(Box::new(Expr::UnaryMinus(Box::new(Expr::Number(42.0)))))
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn logical_negation() -> Result<(), ParserError> {
+        assert_eq!(
+            parse_expr("!!true")?,
+            Expr::Not(Box::new(Expr::Not(Box::new(Expr::Bool(true)))))
         );
         Ok(())
     }
